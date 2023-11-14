@@ -12,7 +12,7 @@ function Navigation() {
         <div className="Catsgram">
           <p>Catsgram</p>
         </div>
-        <button className="button">
+        <button className="button home">
           <NavLink
             to="/"
             style={{ textDecoration: "none" }}
@@ -23,20 +23,20 @@ function Navigation() {
             <h3>Home</h3>
           </NavLink>
         </button>
-        <button className="button">
+        <button id='idSearch' className="button">
           <NavLink
             to="/search"
             style={{ textDecoration: "none" }}
             className={({ isActive }) => (isActive ? "button" : "button")}
             end={true}
-          >
+          > 
             {search}
             <h3>Search</h3>
           </NavLink>
         </button>
-        <button className="button">
+        <button className="button explore">
           <NavLink
-            to="/profile"
+            to="/explore"
             style={{ textDecoration: "none" }}
             className={({ isActive }) => (isActive ? "button" : "button")}
             end={true}
@@ -45,7 +45,7 @@ function Navigation() {
             <h3>Explore</h3>
           </NavLink>
         </button>
-        <button className="button">
+        <button className="button reel">
           <NavLink
             to="/profile"
             style={{ textDecoration: "none" }}
@@ -56,7 +56,7 @@ function Navigation() {
             <h3>Reels</h3>
           </NavLink>
         </button>
-        <button className="button">
+        <button className="button messages">
           <NavLink
             to="/profile"
             style={{ textDecoration: "none" }}
@@ -67,7 +67,7 @@ function Navigation() {
             <h3>Messages</h3>
           </NavLink>
         </button>
-        <button className="button">
+        <button className="button notification">
           <NavLink
             to="/profile"
             style={{ textDecoration: "none" }}
@@ -78,7 +78,7 @@ function Navigation() {
             <h3>Notification</h3>
           </NavLink>
         </button>
-        <button className="button">
+        <button className="button create">
           <NavLink
             to="/profile"
             style={{ textDecoration: "none" }}

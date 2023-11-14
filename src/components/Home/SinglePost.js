@@ -2,7 +2,11 @@ import React from "react";
 import classes from "./SinglePost.module.scss";
 
 function SinglePost(props) {
-  const {name, description, url, origin} = props;
+  let {name, description, url, origin} = props;
+  // name = 'name';
+  // description = 'description';
+  // url = "https://cdn2.thecatapi.com/images/EHG3sOpAM.jpg";
+  // origin = 'origin';
   return (
     <div className={classes.SinglePost}>
       <div className={classes.SinglePost__header}>

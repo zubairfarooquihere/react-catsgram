@@ -1,12 +1,23 @@
+@import "../../index.scss";
+
 .Catsgram {
+  //background-color: bisque;
   width: 100%;
   font-size: 2.75rem;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   margin-bottom: 2rem;
   font-weight: 600;
+
   p {
     padding: 3rem 0rem 2rem 2rem;
-    /* margin-left: 2rem; */
+  }
+
+  @include respond(tab-land) {
+    opacity: 0;
+  }
+
+  @include respond(tab-port) {
+    display: none;
   }
 }
 
@@ -15,9 +26,29 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  width: 15%;
+  width: 23rem;
   height: 100%;
+  bottom: 0;
   border-right: 0.5px solid rgb(201, 201, 201);
+  z-index: 10;
+
+  @include respond(tab-land) {
+    width: 8rem;
+  }
+
+  @include respond(tab-port) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 5rem;
+  }
+}
+
+#idSearch {
+  @include respond(tab-port) {
+    display: none;
+  }
 }
 
 .button {
@@ -35,8 +66,26 @@
   transition: all ease-in-out 0.3s;
   cursor: pointer;
 
+  @include respond(tab-land) {
+    width: 75%;
+    //background-color: aquamarine;
+  }
+
+  @include respond(tab-port) {
+    width: 100%;
+    border-radius: 0;
+  }
+
   &:not(:last-of-type) {
     margin-bottom: 0.7rem;
+
+    @include respond(tab-land) {
+      margin-bottom: 1.3rem;
+    }
+
+    @include respond(tab-port) {
+      margin-bottom: 0;
+    }
   }
 
   &:hover {
@@ -51,6 +100,10 @@
     font-size: 1.75rem;
     font-weight: normal;
     margin-left: 2rem;
+
+    @include respond(tab-land) {
+      display: none;
+    }
   }
 }
 
@@ -61,4 +114,9 @@
 .icon {
   font-size: 2.75rem;
   margin-left: 2rem;
+
+  @include respond(tab-land) {
+    font-size: 3rem;
+    margin: 0 auto;
+  }
 }

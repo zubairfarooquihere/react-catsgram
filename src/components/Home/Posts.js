@@ -1,66 +1,96 @@
-import React from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import classes from "./Posts.module.scss";
 
 import SinglePost from "./SinglePost";
 
-const getUsers = async ({ pageParam = 0 }) => {
-  const res = await fetch(
-    `https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=beng&api_key=live_wAYTx8wsqFf8YKTbmchPeDJOulEnsw82Hreznjr7sA4RykKLpkM2jk2l7KgZYbpz`
-  );
-  const data = await res.json();
-  return { ...data, pageParam };
+let catBreeds = [];
+const getCatBreeds = async () => {
+  try {
+    const res = await fetch("https://api.thecatapi.com/v1/breeds/");
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
-function Posts() {
-  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery({
-    queryKey: ["users"],
-    queryFn: getUsers,
-    getNextPageParam: (lastPage, allPages, context) => {
-      console.log(allPages);
-      console.log(context);
-      return lastPage.pageParam + 10;
-    },
-    config: {
-      staleTime: Infinity, // Set to a large value to prevent automatic refetching
-    },
-  });
+try {
+  catBreeds = await getCatBreeds();
+} catch (e) {
+  console.log("");
+}
 
-  let articles = [];
-  if (data) {
-    const newData = data.pages.map((element) => {
-      const arr = Object.values(element);
-      arr.splice(arr.length - 1, 1);
-      return arr;
+function Posts() {
+  const [Page, setPage] = useState(1);
+  const [articles, setArticles] = useState([]);
+
+  useEffect(() => {
+    const callapi = async () => {
+      try {
+        const Index = Math.floor(Math.random() * catBreeds.length);
+
+        const res = await fetch(
+          `https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=${catBreeds[Index].id}&api_key=live_wAYTx8wsqFf8YKTbmchPeDJOulEnsw82Hreznjr7sA4RykKLpkM2jk2l7KgZYbpz`
+        );
+
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await res.json();
+        //console.log("API Response Data:", data);
+        const newData = data.map((obj) => {
+          return {
+            id: obj.id,
+            url: obj.url,
+            name: obj["breeds"][0].name,
+            description: obj["breeds"][0].description,
+            origin: obj["breeds"][0].origin,
+          };
+        });
+        setArticles((prev) => {
+          return [...prev, ...newData];
+        });
+      } catch (e) {}
+    };
+    callapi();
+  }, [setArticles, Page]);
+
+  const fetchMoreData = () => {
+    //console.log("fetchNextPage" + Page);
+    setPage((prev) => {
+      return prev + 1;
     });
-    //console.log(newData);
-    articles = newData.flatMap((page) =>
-      page.map((cat) => ({ id: cat.id, name: cat['breeds'][0].name, origin: cat['breeds'][0].origin, url: cat.url, description: cat['breeds'][0].description}))
-    );
-  }
-  //console.log(articles);
+  };
 
   return (
     <InfiniteScroll
       dataLength={articles ? articles.length : 0}
-      next={() => fetchNextPage()}
-      hasMore={hasNextPage}
+      next={fetchMoreData}
+      hasMore={true}
       loading={<div>Loading...</div>}
     >
       <div className={classes.Posts}>
-        {articles.map((obj, index)=>{
-          return (<SinglePost
-            key={index}
-            name={obj.name}
-            url={obj.url}
-            description={obj.description}
-            origin={obj.origin}
-          />);
+        {articles.map((obj, index) => {
+          return (
+            <SinglePost
+              key={index}
+              name={obj.name}
+              url={obj.url}
+              description={obj.description}
+              origin={obj.origin}
+            />
+          );
         })}
       </div>
     </InfiniteScroll>
+    // <div>
+    //   <SinglePost />
+    //   <SinglePost />
+    //   <SinglePost />
+    // </div>
   );
 }
 

@@ -1,9 +1,12 @@
+@import '../../index.scss';
 .Posts {
   display: flex;
   align-items: center;
   flex-direction: column;
   margin: 0 auto;
-  width: 79%;
-  //background-color: bisque;
-  //height: 100rem;
+  width: 85%;
+
+  @include respond(tab-port) {
+    width: 100%;
+  }
 }

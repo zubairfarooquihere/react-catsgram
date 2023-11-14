@@ -1,13 +1,34 @@
+@import "../../index.scss";
+
 .RouteLayout {
-    display: flex;
+  display: flex;
+  @include respond(tab-port) {
+    flex-direction: column;
+  }
 }
 
 .navLocation {
-    width: 15%;
-    //background-color: aqua;
+  width: 23rem; //need space because nav is position: fixed;
+
+  @include respond(tab-land) {
+    width: 8rem;
+  }
+
+  @include respond(tab-port) {
+    width: 100;
+  }
 }
 
 .outletLocation {
+  //background-color: rgb(255, 244, 230);
+  width: 57%;
+  //width: 87rem;
+  @include respond(tab-land) {
+    width: 75rem;
+    margin: 0 auto;
+  }
+  @include respond(phone) {
+    width: 100%;
     //background-color: rgb(255, 244, 230);
-    width: 65%;
+  }
 }

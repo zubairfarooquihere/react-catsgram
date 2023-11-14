@@ -3,7 +3,7 @@ import React from "react";
 import classes from "./Stories.module.scss";
 
 function Stories() {
-  const stories = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((ele) => {
+  const stories = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((ele) => {
     return (
       <div key={ele} className={classes.storyHolder}>
         <div className={classes.story}>

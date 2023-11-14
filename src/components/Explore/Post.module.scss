@@ -1,0 +1,27 @@
+@import "../../index.scss";
+
+.Post {
+  //border: 1px solid black;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  
+  &__imagediv {
+    overflow: hidden;
+    object-fit: fill;
+    height: 100%;
+    width: 100%;
+
+    img {
+      overflow: hidden;
+      height: 125%;
+      width: 100%;
+
+      @include respond(tab-port) {
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+}
