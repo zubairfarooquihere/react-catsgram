@@ -1,5 +1,12 @@
 @import "../../index.scss";
 
+.ch {
+  position: relative;
+  left: 0;
+  z-index: 100;
+  height: 100%;
+  width: 8rem;
+}
 .Catsgram {
   //background-color: bisque;
   width: 100%;
@@ -19,11 +26,15 @@
   @include respond(tab-port) {
     display: none;
   }
+
+  &.message-active {
+    opacity: 0;
+  }
 }
 
 .button-container {
-  //background-color: aqua;
   position: fixed;
+  left: 0;
   display: flex;
   flex-direction: column;
   width: 23rem;
@@ -42,6 +53,18 @@
     justify-content: center;
     width: 100%;
     height: 5rem;
+  }
+
+  &.message-active {
+    width: 8rem;
+
+    @include respond(tab-port) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 5rem;
+    }
   }
 }
 
@@ -103,6 +126,23 @@
 
     @include respond(tab-land) {
       display: none;
+    }
+  }
+
+  &.message-active {
+    width: 75%;
+
+    .icon {
+      font-size: 3rem;
+      margin: 0 auto;
+    }
+
+    h3 {
+      display: none;
+    }
+
+    &:not(:last-of-type) {
+      margin-bottom: 0;
     }
   }
 }
