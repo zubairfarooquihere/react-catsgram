@@ -8,8 +8,8 @@ function RouteLayout() {
   const [activeTab, setActiveTab] = useState("");
 
   const layoutFunc = (gotClass) => {
+    //Shorting the button when message page comes.
     setActiveTab(gotClass === 'message-active' ? "message-active" : '');
-    //setActiveTab("message-active");
   }
 
   return (

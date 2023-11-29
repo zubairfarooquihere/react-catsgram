@@ -16,12 +16,20 @@ import {
 
 import Info from "./Info.js";
 import EmojiBox from "./EmojiBox.js";
+import ImageMsg from "./ImageMsg.js";
+import FileMsg from "./FileMsg.js";
+import MoreOption from "./MoreOption.js";
+import DataReaction from "./DataReaction.js";
+import Reply from "./Reply.js";
 
 function Message(props) {
   const [message, setMessage] = useState("");
   const [sendMessage, setSendMessage] = useState([]);
+  const [recieveMessage, setRecieveMessage] = useState([]);
   const [showInfo, setShowInfo] = useState(false);
   const [showEmoji, setShowEmoji] = useState(false);
+  const [showReply, setShowReply] = useState(false);
+  const [replyDetails, setReplyDetails] = useState({});
   const fileInputRef = useRef(null);
 
   if (props.breedName === undefined) {
@@ -35,34 +43,38 @@ function Message(props) {
         </div>
       </div>
     );
+  }else {
+    if(recieveMessage.length === 0){
+      setRecieveMessage([{ message: `Hi, My name is ${props.breedName}`, reaction: "" }])
+    }
   }
 
   const handleKeyPress = (event) => {
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (event.key === "Enter" && !event.shiftKey && event.target.value.trim() !== "") {
       event.preventDefault(); // Prevents a new line in the textarea
 
+      if (showReply) {
+        setSendMessage((prev) => {
+          return [
+            ...prev,
+            {
+              message: event.target.value,
+              reaction: "",
+              reply: replyDetails.message,
+              repliedTo: replyDetails.replyTo,
+            },
+          ];
+        });
+        setShowReply(false);
+        setMessage("");
+        return;
+      }
+
       setSendMessage((prev) => {
-        return [...prev, event.target.value];
+        return [...prev, { message: event.target.value, reaction: "" }];
       });
       setMessage("");
     }
-  };
-
-  const handleDownload = (fileData, fileName) => {
-    // Create a Blob from the file data
-    const blob = new Blob([fileData], { type: "text/plain" });
-
-    // Create a URL for the Blob
-    const url = window.URL.createObjectURL(blob);
-
-    // Create a link element
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = fileName; // Set the download attribute to the file name
-    link.click();
-
-    // Clean up by revoking the Object URL
-    window.URL.revokeObjectURL(url);
   };
 
   const handleFileChange = (event) => {
@@ -84,7 +96,19 @@ function Message(props) {
     });
   };
 
-  const showPicture = () => {};
+  const addReaction = (index, setMsg) => {
+    if (index || index === 0) {
+      setMsg((prev) => {
+        const updatedMessages = [...prev]; // Create a copy of the previous array
+        updatedMessages[index] = { ...updatedMessages[index], reaction: "" }; // Update the reaction of the specific message at the given index
+        return updatedMessages; // Return the updated array
+      });
+      //console.log(sendMessage);
+      return;
+    }
+  };
+
+  //const showPicture = () => {};
 
   return (
     <Fragment>
@@ -119,136 +143,208 @@ function Message(props) {
             </div>
           </div>
           <div className={classes.messageLayout__body}>
-            <div
-              className={`${classes["messageLayout__body--recieve"]} ${classes.msgBlock}`}
-              style={{ whiteSpace: "pre-wrap" }}
-            >
-              Hi, My name is {props.breedName}
-            </div>
+            {recieveMessage.map((data, index) => {
+              let marginBottom = "";
+              if (data.reaction) {
+                marginBottom = "1.5rem";
+              }
+
+              return (<div
+                key="Received"
+                className={`${classes["messageLayout__body--recieve"]} ${classes.msgBlock}`}
+                style={{ whiteSpace: "pre-wrap", marginBottom }}
+              >
+                {data.message}
+                <MoreOption
+                  key={index + "MoreOptionReceived"}
+                  classes={classes}
+                  sendMessage={recieveMessage}
+                  setSendMessage={setRecieveMessage}
+                  index={index}
+                  setShowReply={setShowReply}
+                  setReplyDetails={setReplyDetails}
+                  received={true}
+                  senderName={props.breedName}
+                />
+
+                {recieveMessage[0].reaction && (
+                  <DataReaction
+                    key={index + "DataReactionReceived"}
+                    isReactionPresent={recieveMessage[0].reaction !== ""}
+                    classes={classes}
+                    setSendMessage={setRecieveMessage}
+                    addReaction={addReaction}
+                    index={index}
+                    data={data}
+                    received={true}
+                  />
+                )}
+              </div>)
+            })}
             {sendMessage.map((data, index) => {
               if (data.type === "image/jpeg") {
+                let isReactionPresent = "";
+                if (data.reaction === "") {
+                  isReactionPresent = "none";
+                }
                 return (
-                  <div
-                    key={index}
-                    className={`${classes["messageLayout__body--send"]} ${classes.msgBlock}`}
-                    style={{
-                      whiteSpace: "pre-wrap",
-                      padding: "0rem",
-                      background: "transparent",
-                    }}
-                  >
-                    <img
-                      style={{
-                        cursor: "pointer",
-                        width: "25rem",
-                        height: "20rem",
-                        objectFit: "fill",
-                        borderRadius: "3rem",
-                      }}
-                      onClick={() => {
-                        showPicture(data.dataURL);
-                      }}
-                      src={data.dataURL}
-                      alt={`Uploaded file ${index}`}
-                    />
-                  </div>
+                  <ImageMsg
+                    key={index + "ImageMsg"}
+                    classes={classes}
+                    data={data}
+                    msgBlock={"msgBlock"}
+                    index={index}
+                    setSendMessage={setSendMessage}
+                    isReactionPresent={isReactionPresent}
+                    addReaction={addReaction}
+                    setShowReply={setShowReply}
+                    setReplyDetails={setReplyDetails}
+                    sendMessage={sendMessage}
+                  />
                 );
               }
               if (data.type === "text/plain") {
-                return (
-                  <div
-                    key={index}
-                    onClick={() => handleDownload(data.dataURL, data.name)}
-                    className={`${classes["messageLayout__body--send"]} ${classes.msgBlock} ${classes[emoji]}`}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      cursor: "pointer",
-                      whiteSpace: "pre-wrap",
-                      backgroundColor: "#efefef",
-                      color: "black",
-                      fontWeight: "700",
-                      padding: "1rem",
-                    }}
-                  >
-                    <div //Circle in filr
-                      style={{
-                        height: "3rem",
-                        width: "3rem",
-                        borderRadius: "100%",
-                        backgroundColor: "#e4e4e5",
-                        margin: "1rem",
-                      }}
-                    ></div>
-                    {data.name}
-                  </div>
-                );
-              } else {
-                let emoji = "";
-                if (data === "❤️") {
-                  emoji = "emoji";
+                let isReactionPresent = "";
+                if (data.reaction === "") {
+                  isReactionPresent = "none";
                 }
                 return (
-                  <div
-                    key={index}
-                    className={`${classes["messageLayout__body--send"]} ${classes.msgBlock} ${classes[emoji]}`}
-                    style={{ whiteSpace: "pre-wrap" }}
-                  >
-                    {data}
-                  </div>
+                  <FileMsg
+                    key={index + "textFile"}
+                    classes={classes}
+                    data={data}
+                    msgBlock={"msgBlock"}
+                    index={index}
+                    emoji={emoji}
+                    setSendMessage={setSendMessage}
+                    isReactionPresent={isReactionPresent}
+                    addReaction={addReaction}
+                    setShowReply={setShowReply}
+                    setReplyDetails={setReplyDetails}
+                  />
                 );
+              }
+              if (data.message !== "") {
+                let emojiClass = "";
+                if (data.message === "❤️") {
+                  emojiClass = "emoji";
+                }
+                let marginBottom = "";
+                if (data.reaction) {
+                  marginBottom = "1.5rem";
+                }
+                let isReactionPresent = "";
+                if (data.reaction === "") {
+                  isReactionPresent = "none";
+                }
+                //console.log(data);
+                return (
+                  <React.Fragment>
+                    {data.reply && (
+                      <div className={classes.repliedTo}>
+                        You replied to {data.repliedTo}
+                      </div>
+                    )}
+                    {data.reply && (
+                      <div
+                        key={index + "replyMessage"}
+                        className={`${classes["messageLayout__body--send"]} ${classes.repliedTo__message}`}
+                      >
+                        {data.reply}
+                      </div>
+                    )}
+                    <div
+                      key={index + "textMessage"}
+                      className={`${classes["messageLayout__body--send"]} ${classes.msgBlock} ${classes[emojiClass]}`}
+                      style={{
+                        whiteSpace: "pre-wrap",
+                        marginBottom: marginBottom,
+                      }}
+                    >
+                      {data.message}
+                      <MoreOption
+                        key={index + "MoreOption"}
+                        classes={classes}
+                        sendMessage={sendMessage}
+                        setSendMessage={setSendMessage}
+                        index={index}
+                        setShowReply={setShowReply}
+                        setReplyDetails={setReplyDetails}
+                      />
+
+                      {data.reaction && (
+                        <DataReaction
+                          key={index + "DataReaction"}
+                          isReactionPresent={isReactionPresent}
+                          classes={classes}
+                          addReaction={addReaction}
+                          setSendMessage={setSendMessage}
+                          index={index}
+                          data={data}
+                        />
+                      )}
+                    </div>
+                  </React.Fragment>
+                );
+              } else {
+                return <div>No Data</div>;
               }
             })}
           </div>
-          <div className={classes.messageLayout__textbox}>
-            <div className={classes["messageLayout__textbox--one"]}>
-              <div className={classes["messageLayout__textbox--one__svg"]}>
-                {showEmoji && <EmojiBox setMessage={setMessage} />}
-                <span
-                  onClick={() => {
-                    setShowEmoji((prev) => {
-                      return !prev;
-                    });
-                  }}
-                  className={classes["messageLayout__textbox--one--emoji"]}
-                >
-                  {emoji}
-                </span>
-              </div>
-              <div className={classes["messageLayout__textbox--one__text"]}>
-                <textarea
-                  placeholder="Message..."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={handleKeyPress}
-                ></textarea>
-              </div>
-            </div>
-            {message === "" ? (
-              <div className={classes["messageLayout__textbox--two"]}>
-                <span>{mike}</span>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  style={{ display: "none" }}
-                  onChange={handleFileChange}
-                />
-                <span onClick={() => fileInputRef.current.click()}>
-                  {gallery}
-                </span>
-                <span
-                  onClick={() => {
-                    setSendMessage((prev) => {
-                      return [...prev, "❤️"];
-                    });
-                  }}
-                >
-                  {heart}
-                </span>
-              </div>
-            ) : (
-              <p className={classes.sendBtn}>Send</p>
+          <div className={classes.messageLayout__textboxdiv}>
+            {showReply && (
+              <Reply replyDetails={replyDetails} setShowReply={setShowReply} />
             )}
+            <div className={classes.messageLayout__textbox}>
+              <div className={classes["messageLayout__textbox--one"]}>
+                <div className={classes["messageLayout__textbox--one__svg"]}>
+                  {showEmoji && <EmojiBox setMessage={setMessage} />}
+                  <span
+                    onClick={() => {
+                      setShowEmoji((prev) => {
+                        return !prev;
+                      });
+                    }}
+                    className={classes["messageLayout__textbox--one--emoji"]}
+                  >
+                    {emoji}
+                  </span>
+                </div>
+                <div className={classes["messageLayout__textbox--one__text"]}>
+                  <textarea
+                    placeholder="Message..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyDown={handleKeyPress}
+                  ></textarea>
+                </div>
+              </div>
+              {message === "" ? (
+                <div className={classes["messageLayout__textbox--two"]}>
+                  <span>{mike}</span>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                  />
+                  <span onClick={() => fileInputRef.current.click()}>
+                    {gallery}
+                  </span>
+                  <span
+                    onClick={() => {
+                      setSendMessage((prev) => {
+                        return [...prev, { message: "❤️" }];
+                      });
+                    }}
+                  >
+                    {heart}
+                  </span>
+                </div>
+              ) : (
+                <p className={classes.sendBtn}>Send</p>
+              )}
+            </div>
           </div>
         </div>
       </div>

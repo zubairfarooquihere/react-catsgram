@@ -234,3 +234,83 @@ export const Messagesvg = (
     <path d="M48 0C21.532 0 0 21.533 0 48s21.532 48 48 48 48-21.532 48-48S74.468 0 48 0Zm0 94C22.636 94 2 73.364 2 48S22.636 2 48 2s46 20.636 46 46-20.636 46-46 46Zm12.227-53.284-7.257 5.507c-.49.37-1.166.375-1.661.005l-5.373-4.031a3.453 3.453 0 0 0-4.989.921l-6.756 10.718c-.653 1.027.615 2.189 1.582 1.453l7.257-5.507a1.382 1.382 0 0 1 1.661-.005l5.373 4.031a3.453 3.453 0 0 0 4.989-.92l6.756-10.719c.653-1.027-.615-2.189-1.582-1.453ZM48 25c-12.958 0-23 9.492-23 22.31 0 6.706 2.749 12.5 7.224 16.503.375.338.602.806.62 1.31l.125 4.091a1.845 1.845 0 0 0 2.582 1.629l4.563-2.013a1.844 1.844 0 0 1 1.227-.093c2.096.579 4.331.884 6.659.884 12.958 0 23-9.491 23-22.31S60.958 25 48 25Zm0 42.621c-2.114 0-4.175-.273-6.133-.813a3.834 3.834 0 0 0-2.56.192l-4.346 1.917-.118-3.867a3.833 3.833 0 0 0-1.286-2.727C29.33 58.54 27 53.209 27 47.31 27 35.73 36.028 27 48 27s21 8.73 21 20.31-9.028 20.31-21 20.31Z"></path>
   </svg>
 );
+
+export const Moresvg = (
+  <svg
+    aria-label="More"
+    className="icon"
+    fill="currentColor"
+    height="16"
+    role="img"
+    viewBox="0 0 24 24"
+    width="16"
+  >
+    <title>More</title>
+    <circle cx="12" cy="12" r="1.5"></circle>
+    <circle cx="6" cy="12" r="1.5"></circle>
+    <circle cx="18" cy="12" r="1.5"></circle>
+  </svg>
+);
+
+export const Replysvg = (
+  <svg
+    aria-label="Reply"
+    className="icon"
+    fill="currentColor"
+    height="16"
+    role="img"
+    viewBox="0 0 24 24"
+    width="16"
+  >
+    <title>Reply</title>
+    <path d="M14 8.999H4.413l5.294-5.292a1 1 0 1 0-1.414-1.414l-7 6.998c-.014.014-.019.033-.032.048A.933.933 0 0 0 1 9.998V10c0 .027.013.05.015.076a.907.907 0 0 0 .282.634l6.996 6.998a1 1 0 0 0 1.414-1.414L4.415 11H14a7.008 7.008 0 0 1 7 7v3.006a1 1 0 0 0 2 0V18a9.01 9.01 0 0 0-9-9Z"></path>
+  </svg>
+);
+
+export const Reactionsvg = (
+  <svg
+    aria-label="Reaction"
+    className="icon"
+    fill="currentColor"
+    height="16"
+    role="img"
+    viewBox="0 0 24 24"
+    width="16"
+  >
+    <title>Reaction</title>
+    <path d="M15.83 10.997a1.167 1.167 0 1 0 1.167 1.167 1.167 1.167 0 0 0-1.167-1.167Zm-6.5 1.167a1.167 1.167 0 1 0-1.166 1.167 1.167 1.167 0 0 0 1.166-1.167Zm5.163 3.24a3.406 3.406 0 0 1-4.982.007 1 1 0 1 0-1.557 1.256 5.397 5.397 0 0 0 8.09 0 1 1 0 0 0-1.55-1.263ZM12 .503a11.5 11.5 0 1 0 11.5 11.5A11.513 11.513 0 0 0 12 .503Zm0 21a9.5 9.5 0 1 1 9.5-9.5 9.51 9.51 0 0 1-9.5 9.5Z"></path>
+  </svg>
+);
+
+export const cancelsvg = (
+  <svg
+    aria-label="Cancel reply"
+    className="icon"
+    fill="currentColor"
+    height="12"
+    role="img"
+    viewBox="0 0 24 24"
+    width="12"
+  >
+    <title>Cancel reply</title>
+    <polyline
+      fill="none"
+      points="20.643 3.357 12 12 3.353 20.647"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="3"
+    ></polyline>
+    <line
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      stroke-width="3"
+      x1="20.649"
+      x2="3.354"
+      y1="20.649"
+      y2="3.354"
+    ></line>
+  </svg>
+);

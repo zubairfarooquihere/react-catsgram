@@ -9,19 +9,29 @@ import {
   notification,
   create,
 } from "../ui/svg/Notification";
+import NotificationSlider from "./NotificationSlider";
 
 import "./Navigation.scss";
 
 function Navigation(props) {
   const [activeTab, setActiveTab] = useState("");
+  const [notificationSlider, setNotificationSlider] = useState(false);
 
   const msgClick = useCallback(
     (gotClass = "") => {
+      const currentURL = window.location.pathname;
+      gotClass = (notificationSlider === true || currentURL === "/message") ? 'message-active' : '';
       setActiveTab(gotClass);
       props.layoutFunc(gotClass);
     },
-    [props]
+    [setActiveTab, props, notificationSlider]
   );
+
+  const openSlider = () => {
+    setNotificationSlider((prev) => {
+      return !prev;
+    });
+  };
 
   useEffect(() => {
     const currentURL = window.location.pathname;
@@ -126,15 +136,14 @@ function Navigation(props) {
             }}
             className={`button notification ${activeTab}`}
           >
-            <NavLink
-              to="/profile"
+            <div
               style={{ textDecoration: "none" }}
-              className={({ isActive }) => (isActive ? "button" : "button")}
-              end={true}
+              className={"button"}
+              onClick={openSlider}
             >
               {notification}
               <h3>Notification</h3>
-            </NavLink>
+            </div>
           </button>
           <button
             onClick={() => {
@@ -153,6 +162,7 @@ function Navigation(props) {
             </NavLink>
           </button>
         </div>
+        {notificationSlider && <NotificationSlider />}
       </div>
     </React.Fragment>
   );
